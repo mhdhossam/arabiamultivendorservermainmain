@@ -41,13 +41,13 @@ def initiate_payment(request, order_id):
 import json
 from .paymob import calculate_hmac
 import os
-from dotenv import load_dotenv
+
 
 # Load environment variables from the .env file
-load_dotenv()
+
 
 # Get the HMAC_SECRET from the .env file
-HMAC_SECRET = os.getenv('HMAC_SECRET')
+HMAC_SECRET = "CB8DD982B47F3C9BB17D5039D3A9F88C"
 
 # Ensure SECRET_KEY is defined
 if not HMAC_SECRET:

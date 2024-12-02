@@ -1,0 +1,37 @@
+{% extends "admin/base_site.html" %} {% block content %}
+<h1>Sales Data</h1>
+<canvas id="salesChart" width="400" height="200"></canvas>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+    const ctx = document.getElementById('salesChart').getContext('2d');
+
+     // Pass your sales data from Django to JavaScript
+    const salesData = {{ sales_data|safe }};
+  	if (salesData.length === 0) {
+  		console.error("Sales data is empty.");
+  }
+    const labels = salesData.map(item => item.product__translations__name|| "Unknown Product"); // Adjust according to your data structure
+    const data = salesData.map(item => parseFloat(item.total_sales) || 0);
+
+    const myChart = new Chart(ctx, {
+        type: 'bar', // Change this to 'line', 'pie', etc. for different chart types
+        data: {
+            labels: labels,
+            datasets: [{
+                label: 'Total Sales',
+                data: data,
+                backgroundColor: 'rgba(75, 192, 192, 0.2)',
+                borderColor: 'rgba(75, 192, 192, 1)',
+                borderWidth: 1
+            }]
+        },
+        options: {
+            scales: {
+                y: {
+                    beginAtZero: true
+                }
+            }
+        }
+    });
+</script>
+{% endblock %}

@@ -1,0 +1,4 @@
+.login-logo img {
+  max-width: 200px; /* Adjust this value as needed */
+  height: auto; /* Maintain aspect ratio */
+}

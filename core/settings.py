@@ -292,8 +292,8 @@ SOCIALACCOUNT_PROVIDERS = {
             'access_type': 'online',
         },
         'APP': {
-            'client_id': env('googleclientid'),
-            'secret': env('googlesecret'),
+            'client_id': env('glclientid'),
+            'secret': env('gl_secret'),
             'key': ''
         }
     }

@@ -238,19 +238,32 @@ EMAIL_USE_TLS = True
 
 
 
-CORS_ALLOWED_ORIGINS = [
-    "http://localhost:5173"
+CORS_ALLOW_ALL_ORIGINS = True 
+CORS_ALLOW_CREDENTIALS = True  
+CORS_ALLOW_METHODS = [
+    'DELETE',
+    'GET',
+    'OPTIONS',
+    'PATCH',
+    'POST',
+    'PUT',
 ]
-CORS_ALLOW_CREDENTIALS = True
-CSRF_COOKIE_SECURE = True
-CSRF_COOKIE_HTTP_ONLY = True
+
+# CSRF_COOKIE_SECURE = True
+# CSRF_COOKIE_HTTP_ONLY = True
+# CSRF_TRUSTED_ORIGINS = [
+#     "http://localhost:5173"
+# ]
+# CORS_EXPOSE_HEADERS = ["Content-Type", "X-CSRFToken"]
+# SESSION_COOKIE_SECURE = True
+# CSRF_COOKIE_SAMESITE = "None"
+# SESSION_COOKIE_SAMESITE = "None"
 CSRF_TRUSTED_ORIGINS = [
-    "http://localhost:5173"
+    'https://arabiamultivendorservermainmain-production.up.railway.app/',
+    'http://arabiamultivendorservermainmain-production.up.railway.app/',
 ]
-CORS_EXPOSE_HEADERS = ["Content-Type", "X-CSRFToken"]
-SESSION_COOKIE_SECURE = True
-CSRF_COOKIE_SAMESITE = "None"
-SESSION_COOKIE_SAMESITE = "None"
+
+CSRF_COOKIE_SECURE = False
 
 
 # Authentication backends

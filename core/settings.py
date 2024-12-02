@@ -283,20 +283,20 @@ SOCIALACCOUNT_PROVIDERS = {
         'VERIFIED_EMAIL': False,
         'VERSION': 'v11.0',
     },
-    'google': {
-        'SCOPE': [
-            'profile',
-            'email',
-        ],
-        'AUTH_PARAMS': {
-            'access_type': 'online',
-        },
-        'APP': {
-            'client_id': env('glclientid'),
-            'secret': env('gl_secret'),
-            'key': ''
-        }
-    }
+    # 'google': {
+    #     'SCOPE': [
+    #         'profile',
+    #         'email',
+    #     ],
+    #     'AUTH_PARAMS': {
+    #         'access_type': 'online',
+    #     },
+    #     'APP': {
+    #         'client_id': env('glclientid'),
+    #         'secret': env('gl_secret'),
+    #         'key': ''
+    #     }
+    # }
 }
 
 ACCOUNT_EMAIL_REQUIRED = True

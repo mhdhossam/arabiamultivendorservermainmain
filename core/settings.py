@@ -259,8 +259,8 @@ CORS_ALLOW_METHODS = [
 # CSRF_COOKIE_SAMESITE = "None"
 # SESSION_COOKIE_SAMESITE = "None"
 CSRF_TRUSTED_ORIGINS = [
-    'https://arabiamultivendorservermainmain-production.up.railway.app/',
-    'http://arabiamultivendorservermainmain-production.up.railway.app/',
+    'https://arabiamultivendorservermainmain-production.up.railway.app',
+    'http://arabiamultivendorservermainmain-production.up.railway.app',
 ]
 
 CSRF_COOKIE_SECURE = False

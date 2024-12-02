@@ -4,11 +4,6 @@ from django.db import migrations, connection
 from django.db.utils import ProgrammingError
 
 def create_pg_trgm_extension(apps, schema_editor):
-
-    with connection.cursor() as cursor:
-        try:
-            cursor.execute("CREATE EXTENSION IF NOT EXISTS pg_trgm;")
-        except ProgrammingError:
             pass  # Ignore errors if the extension can't be created (e.g., permission issues)
 
 class Migration(migrations.Migration):

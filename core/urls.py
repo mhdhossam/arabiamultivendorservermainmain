@@ -35,6 +35,7 @@ urlpatterns = i18n_patterns(
     path('accounts/', include('allauth.urls')), #for  social login
     path("api/account/", include("useraccount.urls", namespace="account")),
     path("api/products/", include("product.urls", namespace="products")),
+    
     path("api/advertisement/", include("advertisement.urls", namespace="advertisement")),
     path("api/order/", include("order.urls", namespace="order")),
     path("api/payment/", include("payment.urls", namespace="payment")),

@@ -209,7 +209,7 @@ USE_TZ = True
 
 
 STATIC_URL = 'static/'
-
+STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 STATICFILES_DIRS = [
     BASE_DIR / "static",
     # "/var/www/static/",
@@ -291,11 +291,11 @@ SOCIALACCOUNT_PROVIDERS = {
         'AUTH_PARAMS': {
             'access_type': 'online',
         },
-        # 'APP': {
-        #     'client_id': '<your-google-client-id>',
-        #     'secret': '<your-google-client-secret>',
-        #     'key': ''
-        # }
+        'APP': {
+            'client_id': env('googleclientid'),
+            'secret': env('googlesecret'),
+            'key': ''
+        }
     }
 }
 

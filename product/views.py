@@ -184,7 +184,14 @@ class ProductRetrievalViewSet(viewsets.ReadOnlyModelViewSet):
     filter_backends = [DjangoFilterBackend, filters.OrderingFilter]
     ordering_fields = ["sales", "total_views"]
 
-
+class HomeProductRetrievalViewSet(viewsets.ReadOnlyModelViewSet):
+    queryset = Product.objects.all()
+    serializer_class = ProductSerializer
+    filter_backends = [DjangoFilterBackend, filters.OrderingFilter]
+    ordering_fields = ["sales", "total_views"]
+    def get_queryset(self):
+        return Product.objects.all().order_by('-total_views')[:10]
+    
 class VendorProductsViewSet(ViewSet):
     permission_classes = [IsAuthenticated]
 

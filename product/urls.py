@@ -8,6 +8,7 @@ app_name = "product"
 router = DefaultRouter()
 router.register(r'reviews', views.ReviewViewSet)
 router.register(r'productsretrieve', views.ProductRetrievalViewSet)
+router.register(r'homeproductretrieval', views.HomeProductRetrievalViewSet,basename='homeproductretrieval')
 router.register(r'vendorproduct', views.VendorProductsViewSet, basename='vendorproduct')
 router.register(r'categoryretrive', views.CategoryRetrievalViewSet)
 router.register(r"category", views.CategoryViewSet)

@@ -3,6 +3,7 @@ from datetime import timedelta
 from pathlib import Path
 import environ 
 import os
+from decouple import config
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -18,7 +19,7 @@ SECRET_KEY = 'django-insecure-t+o87tcbcea5%kkscv($!=5js%-@sxk7wq1v%tdjg$njj5$h^%
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['arabiamultivendorservermainmain-production.up.railway.app']
+ALLOWED_HOSTS = ['*']
 
 
 # Application definition
@@ -84,11 +85,15 @@ REST_FRAMEWORK = {
     "DEFAULT_PERMISSION_CLASSES": ["rest_framework.permissions.AllowAny"],
     "DEFAULT_AUTHENTICATION_CLASSES": (
         "rest_framework_simplejwt.authentication.JWTAuthentication",
+<<<<<<< Updated upstream
+=======
+        # "dj_rest_auth.authentication.JWTAuthentication",
+>>>>>>> Stashed changes
     ),
 }
 
 
-
+REST_USE_JWT = True
 
 SIMPLE_JWT = {
     "ACCESS_TOKEN_LIFETIME": timedelta(days=190),
@@ -276,6 +281,7 @@ AUTHENTICATION_BACKENDS = (
 # LOGIN_REDIRECT_URL = '/'
 # LOGOUT_REDIRECT_URL = '/'
 
+
 # Required for social login
 SOCIALACCOUNT_PROVIDERS = {
     'facebook': {
@@ -296,21 +302,25 @@ SOCIALACCOUNT_PROVIDERS = {
         'VERIFIED_EMAIL': False,
         'VERSION': 'v11.0',
     },
-    # 'google': {
-    #     'SCOPE': [
-    #         'profile',
-    #         'email',
-    #     ],
-    #     'AUTH_PARAMS': {
-    #         'access_type': 'online',
-    #     },
-    #     'APP': {
-    #         'client_id': env('glclientid'),
-    #         'secret': env('gl_secret'),
-    #         'key': ''
-    #     }
-    # }
+    'google': {
+        'SCOPE': [
+            'profile',
+            'email',
+        ],
+        'AUTH_PARAMS': {
+            'access_type': 'online',
+        },
+        'APP': {
+            'client_id':config('ID'),
+            'secret':config('SECRET'),
+            'key': ''
+        }
+    }
 }
+
+
+
+
 
 ACCOUNT_EMAIL_REQUIRED = True
 ACCOUNT_USER_MODEL_USERNAME_FIELD = None

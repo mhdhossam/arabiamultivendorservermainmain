@@ -12,6 +12,12 @@ router.register(r'favorites', FavoriteViewSet, basename='favorite')
 urlpatterns = router.urls
 
 urlpatterns = [
+    path('auth/', include('dj_rest_auth.urls')),  # Login/logout
+
+    path('auth/registration/', include('dj_rest_auth.registration.urls')),  # Registration
+    path('auth/social/', include('allauth.socialaccount.urls')),  # Social login
+    
+
     path('', include(router.urls)),
     path("login/", views.CustomTokenObtainPairView.as_view(), name="login"),
     path("token/refresh/", TokenRefreshView.as_view(), name="refresh"),

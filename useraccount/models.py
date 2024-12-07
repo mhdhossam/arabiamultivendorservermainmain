@@ -26,6 +26,8 @@ class Address(models.Model):
         return f"{self.address_1}"
 
 
+
+
 class User(AbstractBaseUser, PermissionsMixin):
     id = models.UUIDField(default=uuid.uuid4, unique=True, primary_key=True, editable=False)
     email = models.EmailField(_("Email"), max_length=255, unique=True)
@@ -113,6 +115,22 @@ class SupplierDocuments (models.Model):
     bank_statement=models.FileField(_("Bank statement"),upload_to=suppliers_documents_path)
     def __str__(self) -> str:
         return self.user.email
+
+from django.db import models
+
+import uuid
+
+class VendorPayoutOTP(models.Model):
+    vendor = models.ForeignKey(User, on_delete=models.CASCADE,related_name='supplier')  # Assuming vendors are User instances
+    otp = models.CharField(max_length=6)  # Six-digit OTP
+    is_used = models.BooleanField(default=False)
+    created_at = models.DateTimeField(auto_now_add=True)
+    expires_at = models.DateTimeField()  # Expiry time for the OTP
+
+    def is_valid(self):
+        """Check if the OTP is valid."""
+        from django.utils.timezone import now
+        return not self.is_used and now() < self.expires_at
 
 
 class SupplierProfile(models.Model):

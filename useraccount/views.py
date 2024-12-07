@@ -5,6 +5,7 @@ from django.contrib.auth.models import Group
 from django.core.cache import cache
 from django.db.models import Avg
 from django.utils.translation import gettext_lazy as _
+from payment.api import transfer_to_vendor
 from rest_framework import status , viewsets,mixins
 from rest_framework.generics import (
     CreateAPIView,
@@ -18,6 +19,7 @@ from rest_framework.generics import (
     RetrieveUpdateDestroyAPIView,
     RetrieveAPIView,
 )
+from.models import VendorPayoutOTP
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.views import APIView
@@ -434,3 +436,72 @@ class FavoriteViewSet(mixins.CreateModelMixin, viewsets.GenericViewSet):
             cache.set(cache_key, cached_products, timeout=300)  
 
         return Response(cached_products, status=status.HTTP_200_OK)
+
+
+from django.utils.timezone import now, timedelta
+from rest_framework.decorators import api_view, permission_classes
+from rest_framework.response import Response
+from rest_framework.permissions import IsAuthenticated, IsAdminUser
+from .models import User, VendorPayoutOTP  # Import your models
+ # Import your transfer function
+# other imports...
+
+import random
+
+@api_view(['POST'])
+@permission_classes([IsAdminUser])
+def generate_vendor_otp(request, vendor_id):
+    """
+    Admin generates an OTP for a vendor.
+    """
+    try:
+        vendor = User.objects.get(id=vendor_id)
+        otp = f"{random.randint(100000, 999999)}"  # Generate a 6-digit OTP
+        expires_at = now() + timedelta(minutes=10)  # OTP expires in 10 minutes
+        
+        VendorPayoutOTP.objects.create(vendor=vendor, otp=otp, expires_at=expires_at)
+        
+        # Send OTP to vendor (e.g., via email or SMS)
+        # Example: send_email_to_vendor(vendor.email, f"Your OTP is {otp}")
+        
+        return Response({'success': True, 'message': f"OTP sent to vendor {vendor.email}"})
+    except User.DoesNotExist:
+        return Response({'error': 'Vendor not found.'}, status=404)
+    except Exception as e:
+        return Response({'error': str(e)}, status=500)
+
+@api_view(['POST'])
+@permission_classes([IsAdminUser])  # Restrict to admins
+def payout_to_vendor(request):
+    """
+    API to transfer money to a vendor's card with OTP validation.
+    """
+    vendor_card = request.data.get('vendor_card')
+    amount = request.data.get('amount')
+    otp = request.data.get('otp')  # OTP provided by the vendor
+    vendor_id = request.data.get('vendor_id')
+
+    if not vendor_card or not amount or not otp or not vendor_id:
+        return Response({'error': 'Vendor card, amount, OTP, and vendor ID are required.'}, status=400)
+
+    try:
+        vendor = User.objects.get(id=vendor_id)
+        otp_record = VendorPayoutOTP.objects.filter(vendor=vendor, otp=otp).first()
+
+        if not otp_record:
+            return Response({'error': 'Invalid OTP.'}, status=400)
+        if not otp_record.is_valid():
+            return Response({'error': 'OTP is expired or already used.'}, status=400)
+
+        # Mark OTP as used
+        otp_record.is_used = True
+        otp_record.save()
+
+        amount_cents = int(float(amount) * 100)  # Convert amount to cents
+        payout_response = transfer_to_vendor(vendor_card, amount_cents)
+
+        return Response({'success': True, 'payout_response': payout_response}, status=200)
+    except User.DoesNotExist:
+        return Response({'error': 'Vendor not found.'}, status=404)
+    except Exception as e:
+        return Response({'error': str(e)}, status=500)

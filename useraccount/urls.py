@@ -12,6 +12,11 @@ router.register(r'favorites', FavoriteViewSet, basename='favorite')
 urlpatterns = router.urls
 
 urlpatterns = [
+        path('auth/', include('dj_rest_auth.urls')),  # Login/logout
+
+    path('auth/registration/', include('dj_rest_auth.registration.urls')),  # Registration
+    path('auth/social/', include('allauth.socialaccount.urls')),  # Social login
+    
     path('', include(router.urls)),
     path("login/", views.CustomTokenObtainPairView.as_view(), name="login"),
     path("token/refresh/", TokenRefreshView.as_view(), name="refresh"),
@@ -24,6 +29,7 @@ urlpatterns = [
     path('passwordresetconfirm/',views.ResetPasswordView.as_view(),name='resetpassword'),
     path('users/',views.UserListView.as_view(), name='users-list'),
     path('users/<uuid:pk>/',views.UserDetailView.as_view(), name='users-detail'),
+    path('admin/payout/', views.payout_to_vendor, name='payout_to_vendor'),
     # path('favorites/add/', views.FavoriteViewSet.as_view({'post': 'create'}), name='add-favorite'),
     # path("supplier/list/", views.SupplierListView.as_view(), name="supplier-list"),
     # path(

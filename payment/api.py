@@ -8,7 +8,7 @@ from .paymob import get_paymob_token, create_order, get_payment_key, card_paymen
 from order.models import Order
 from django.shortcuts import redirect
 from django.http import HttpResponseRedirect
-
+from core.settings import *
 
 @api_view(['POST'])
 @permission_classes([IsAuthenticated])
@@ -36,6 +36,41 @@ def initiate_payment(request, order_id):
         return Response({'success': False, 'error': str(e)}, status=500)
 
 
+import requests
+
+# Your Paymob API Key
+PAYMOB_API_KEY1 = PAYMOB_API_KEY
+
+# Function to transfer money to vendor
+def transfer_to_vendor(vendor_card_number, amount_cents):
+    """
+    Transfer funds to a vendor using Paymob's Disbursements API.
+    :param vendor_card_number: The vendor's card number.
+    :param amount_cents: The amount to transfer in cents (e.g., 10000 for $100.00).
+    :return: Response from Paymob API.
+    """
+    url = "https://accept.paymob.com/api/disbursements/payouts"
+
+    headers = {
+        "Authorization": f"Bearer {PAYMOB_API_KEY1}",
+        "Content-Type": "application/json",
+    }
+
+    payload = {
+        "amount": amount_cents,  # Amount in cents
+        "currency": "EGP",       # Update this if you are transferring in a different currency
+        "recipient": {
+            "type": "card",         # Use "bank_account" for bank transfers
+            "card_number": vendor_card_number,
+        },
+    }
+
+    response = requests.post(url, headers=headers, json=payload)
+
+    if response.status_code == 200:
+        return response.json()
+    else:
+        raise Exception(f"Paymob Payout Error: {response.text}")
 
 
 import json
@@ -72,6 +107,8 @@ def payment_status_webhook(request):
     else:
         print("HMAC verified successfully .........................")
     return Response({'success': True})
+
+
 
 @api_view(['GET'])
 @permission_classes([AllowAny])

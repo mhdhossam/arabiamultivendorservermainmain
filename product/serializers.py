@@ -51,7 +51,7 @@ class ProductImageSerializer(serializers.ModelSerializer):
         fields=['id','image','alt_text']
 
 class ProductSerializer(TranslatableModelSerializer):
-    supplier_name = serializers.CharField(source='supplier.username', read_only=True)
+    supplier_name = serializers.CharField(source='supplier.full_name', read_only=True)
     productName = serializers.CharField(source="name")
     productDescription = serializers.CharField(source="description",required=False)
     # Use PrimaryKeyRelatedField for writable actions (POST/PUT)
@@ -75,7 +75,12 @@ class ProductSerializer(TranslatableModelSerializer):
 
     class Meta:
         model = Product
-        fields = "__all__"
+        fields=['supplier_name','productName', 'productName', 'productDescription', 'category_details',
+            'brand_details', 'color_details', 'size_details', 'specifications',
+            'reviews', 'images', 'sku', 'slug', 'price_before_discount',
+            'price_after_discount', 'stock_quantity', 'total_sold', 'total_views',
+            'is_available', 'created', 'updated','category','color','translations','brand',
+            'image_uploads','size']
     
     def get_translations(self, obj):
         # Assuming you are handling 'en' and 'ar' languages
@@ -158,11 +163,12 @@ class ProductSerializer(TranslatableModelSerializer):
 
 
 class ProductMinimalSerializer(serializers.ModelSerializer):
+    supplier_name = serializers.CharField(source='supplier.full_name', read_only=True)
     images=ProductImageSerializer(many=True, read_only=True)
     name = serializers.SerializerMethodField()
     class Meta:
         model = Product
-        fields = ['id','name', 'price_after_discount','images']
+        fields = ['id','name', 'price_after_discount','images',"supplier_name"]
     def get_name(self, obj):
         # Use the current language code
         language = get_language()
@@ -172,7 +178,7 @@ class ProductMinimalSerializer(serializers.ModelSerializer):
     
 
 class ProductFactSerializer(serializers.ModelSerializer):
-    supplier_name = serializers.CharField(source='supplier.username', read_only=True)
+    supplier_name = serializers.CharField(source='supplier.full_name', read_only=True)
     class Meta:
         model = ProductFact  # Fact model for optimized retrieval
         fields = "__all__"

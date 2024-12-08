@@ -18,7 +18,7 @@ SECRET_KEY = 'django-insecure-t+o87tcbcea5%kkscv($!=5js%-@sxk7wq1v%tdjg$njj5$h^%
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['arabiamultivendorservermainmain-production.up.railway.app']
+ALLOWED_HOSTS = ['arabiamultivendorservermainmain-production.up.railway.app','127.0.0.1']
 
 
 # Application definition
@@ -99,11 +99,11 @@ SIMPLE_JWT = {
 }
 
 
-FRONTEND_URL='http://localhost:5173'
+# FRONTEND_URL='http://localhost:5173'
 
-CORS_ALLOWED_ORIGINS = [
-    FRONTEND_URL,
-]
+# CORS_ALLOWED_ORIGINS = [
+#     FRONTEND_URL,
+# ]
 CORS_ALLOW_ALL_ORIGINS=True
 
 
@@ -347,10 +347,10 @@ JAZZMIN_SETTINGS = {
     "site_icon": None,
 
     # Welcome text on the login screen
-    "welcome_sign": "Welcome to the Mohamed Mosaad Panel.",
+    "welcome_sign": "Welcome to the Arabia Panel.",
 
     # Copyright on the footer
-    "copyright": "Mohamed Mosaad",
+    "copyright": "Arabia",
 
     # List of model admins to search from the search bar, search bar omitted if excluded
     # If you want to use a single search field you dont need to use a list, you can use a simple string 

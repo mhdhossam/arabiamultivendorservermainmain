@@ -51,6 +51,7 @@ class ProductImageSerializer(serializers.ModelSerializer):
         fields=['id','image','alt_text']
 
 class ProductSerializer(TranslatableModelSerializer):
+    supplier_name = serializers.CharField(source='supplier.username', read_only=True)
     productName = serializers.CharField(source="name")
     productDescription = serializers.CharField(source="description",required=False)
     # Use PrimaryKeyRelatedField for writable actions (POST/PUT)
@@ -171,6 +172,7 @@ class ProductMinimalSerializer(serializers.ModelSerializer):
     
 
 class ProductFactSerializer(serializers.ModelSerializer):
+    supplier_name = serializers.CharField(source='supplier.username', read_only=True)
     class Meta:
         model = ProductFact  # Fact model for optimized retrieval
         fields = "__all__"

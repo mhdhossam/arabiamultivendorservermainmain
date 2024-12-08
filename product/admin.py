@@ -1,6 +1,6 @@
 from django.contrib import admin
 from parler.admin import TranslatableAdmin,TranslatableModelForm
-from.models import Brand,Category,Product,Review,Color,Size,ProductImage
+from.models import Brand,Category,Product,Review,Color,Size,ProductImage,ProductFact
 from mptt.admin import MPTTModelAdmin
 from mptt.forms import MPTTAdminForm
 
@@ -44,3 +44,4 @@ admin.site.register(Review , ReviewAdmin)
 admin.site.register(Color,TranslatableAdmin)
 admin.site.register(Size,TranslatableAdmin)
 admin.site.register(ProductImage)
+admin.site.register(ProductFact)

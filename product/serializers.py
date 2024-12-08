@@ -178,10 +178,14 @@ class ProductMinimalSerializer(serializers.ModelSerializer):
     
 
 class ProductFactSerializer(serializers.ModelSerializer):
-    supplier_name = serializers.CharField(source='supplier.full_name', read_only=True)
+    suppliername = serializers.CharField(source='supplierproduct.full_name', read_only=True)
+  
+    
     class Meta:
         model = ProductFact  # Fact model for optimized retrieval
-        fields = "__all__"
+        # fields = "__all__"
+        fields = ['product_id','category_slug', 'brand_slug','product_name','product_slug','first_image','price_before_discount'
+                  ,'suppliername','price_after_discount','stock_quantity','total_sold','total_views','created','updated','category',"brand",'color','size']
 
 class CategoryDimensionSerializer(serializers.ModelSerializer):
     class Meta:

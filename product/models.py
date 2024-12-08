@@ -236,6 +236,7 @@ class ColorDimension(models.Model):
 
 
 class ProductFact(models.Model):
+    supplierproduct = models.ForeignKey(User, on_delete=models.CASCADE, related_name='productfact',null=True)
     product_id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     category = models.ForeignKey('CategoryDimension', on_delete=models.SET_NULL, null=True)
     category_slug = models.SlugField(null=True, blank=True) 

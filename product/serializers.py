@@ -75,12 +75,13 @@ class ProductSerializer(TranslatableModelSerializer):
 
     class Meta:
         model = Product
-        fields=['supplier_name','productName', 'productName', 'productDescription', 'category_details',
-            'brand_details', 'color_details', 'size_details', 'specifications',
-            'reviews', 'images', 'sku', 'slug', 'price_before_discount',
-            'price_after_discount', 'stock_quantity', 'total_sold', 'total_views',
-            'is_available', 'created', 'updated','category','color','translations','brand',
-            'image_uploads','size']
+        fields = '__all__'
+        # fields=['supplier_name','productName', 'productName', 'productDescription', 'category_details',
+        #     'brand_details', 'color_details', 'size_details', 'specifications',
+        #     'reviews', 'images', 'sku', 'slug', 'price_before_discount',
+        #     'price_after_discount', 'stock_quantity', 'total_sold', 'total_views',
+        #     'is_available', 'created', 'updated','category','color','translations','brand',
+        #     'image_uploads','size']
     
     def get_translations(self, obj):
         # Assuming you are handling 'en' and 'ar' languages

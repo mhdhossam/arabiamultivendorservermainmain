@@ -10,6 +10,7 @@ from allauth.account.signals import user_signed_up
 from django.dispatch import receiver
 from useraccount.models import User
 
+
 class ParentWalletNotFoundError(Exception):
     pass
 
@@ -34,24 +35,28 @@ def create_user_wallet(sender, instance, created, **kwargs):
 @receiver(post_save, sender=User)
 def create_company_from_user(sender, instance, created, **kwargs):
     if created:
+        print(instance.phone)
         with transaction.atomic():
+            pass
             # email_local_part = instance.email.split('@')[0]
             # company_name = instance.full_name if instance.full_name else email_local_part
-            company_instance, _ = Company.objects.get_or_create(
-                user=instance,
-                defaults={
-                    "name": instance.full_name,
-                    "email": instance.email,
-                    "phone": instance.phone,
-                    "address": instance.shipping_address,
-                },
-            )
+            # company_instance, _ = Company.objects.get_or_create(
+            #     user=instance,
+            #     defaults={
+            #         "name": instance.full_name,
+            #         "email": instance.email,
+            #         "phone": instance.phone,
+            #         "address": instance.shipping_address,
+            #     },
+            # )
+            
+            
 
-# @receiver(user_signed_up)
-# def social_account_signup(sender, request, user, **kwargs):
-#     # Check if the social login is Google
-#     social_account = SocialAccount.objects.filter(user=user, provider='google').first()
-#     if social_account:
-#         user.is_buyer = True  
-#         user.is_active = True
-#         user.save()
+@receiver(user_signed_up)
+def social_account_signup(sender, request, user, **kwargs):
+    # Check if the social login is Google
+    social_account = SocialAccount.objects.filter(user=user, provider='google').first()
+    if social_account:
+        user.is_buyer = True  
+        user.is_active = True
+        user.save()

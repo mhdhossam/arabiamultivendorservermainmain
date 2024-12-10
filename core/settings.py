@@ -302,13 +302,31 @@ SOCIALACCOUNT_PROVIDERS = {
             'profile',
             'email',
         ],
+        'FIELDS': [
+            
+            'email',
+            'name',
+            'first_name',
+            'last_name',
+            'phone',
+        ],
         'AUTH_PARAMS': {
             'access_type': 'online',
         },
         'APP': {
             'client_id':config('ID'),
             'secret':config('SECRET'),
-            'key': ''
+            'key': '',
+            "settings": {
+                    # You can fine tune these settings per app:
+                    "scope": [
+                        "profile",
+                        "email",
+                    ],
+                    "auth_params": {
+                        "access_type": "online",
+                    },
+                }
         }
     }
 

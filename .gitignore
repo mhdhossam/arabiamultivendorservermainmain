@@ -5,7 +5,7 @@
 
 
 
-
+db.sqlite3
 # Backup files # 
 *.bak 
 

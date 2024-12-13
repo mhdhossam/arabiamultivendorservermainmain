@@ -492,7 +492,7 @@ def payout_to_vendor(request):
     user=request.user
 
     if  not amount or not otp or not vendor_id:
-        return Response({'error': 'Vendor card, amount, OTP, and vendor ID are required.'}, status=400)
+        return Response({'error': ' amount, OTP, and vendor ID are required.'}, status=400)
 
     try:
         otp_record = VendorPayoutOTP.objects.filter(otp=otp).first()

@@ -449,7 +449,7 @@ from .models import User, VendorPayoutOTP  # Import your models
 import random
 
 @api_view(['POST'])
-@permission_classes([IsAdminUser])
+# @permission_classes([IsAdminUser])
 def generate_vendor_otp(request, vendor_id):
     """
     Admin generates an OTP for a vendor.
@@ -471,7 +471,7 @@ def generate_vendor_otp(request, vendor_id):
         return Response({'error': str(e)}, status=500)
 
 @api_view(['POST'])
-@permission_classes([IsAdminUser])  # Restrict to admins
+# @permission_classes([IsAdminUser])  # Restrict to admins
 def payout_to_vendor(request):
     """
     API to transfer money to a vendor's card with OTP validation.

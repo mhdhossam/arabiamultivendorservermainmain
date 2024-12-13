@@ -450,12 +450,12 @@ import random
 
 @api_view(['POST'])
 @permission_classes([IsAuthenticated])
-def generate_vendor_otp(request, vendor_id):
+def generate_vendor_otp(request):
     """
     Admin generates an OTP for a vendor.
     """
     try:
-        
+        vendor_id=request.data.get("vendor_id")
         vendor = User.objects.get(id=vendor_id)
         if not vendor.is_supplier:
             return Response({'detail': 'user is not a supplier.'}, status=status.HTTP_400_BAD)

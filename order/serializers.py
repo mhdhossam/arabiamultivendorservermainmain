@@ -124,6 +124,7 @@ class CreateOrderSerializer(serializers.Serializer):
         with transaction.atomic():
             cart_id = self.validated_data["cart_id"]
             user_id = self.context["user_id"]
+            vendor_ids=[]
 
             # Create the order
             order = Order.objects.create(user_id=user_id)
@@ -145,6 +146,7 @@ class CreateOrderSerializer(serializers.Serializer):
                     raise ValidationError(f"Insufficient stock for {product.name}.")
                 product.stock_quantity -= item.quantity
                 product.total_sold += item.quantity
+                vendor_ids.append(product.supplier.id)
                 product.save()
             # Bulk create all order items
             OrderItem.objects.bulk_create(orderitems)
@@ -155,5 +157,6 @@ class CreateOrderSerializer(serializers.Serializer):
             cart = Cart.objects.get(id=cart_id)
             cart.checked_out = True
             cart.save()
+            
 
-            return order
+            return order,vendor_ids

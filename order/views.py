@@ -31,18 +31,26 @@ class CheckoutView(generics.CreateAPIView):
     permission_classes = [IsAuthenticated]
 
     def post(self, request, *args, **kwargs):
+        # print(request.user.id)
         serializer = self.get_serializer(data=request.data, context={'user_id': request.user.id})
+        
         serializer.is_valid(raise_exception=True)
-        order = serializer.save()
-        if not Payment.objects.filter(order=order, is_paid=True).exists():
-            return Response(
-                {'error': 'Payment must be completed before checkout.'},
-                status=status.HTTP_400_BAD_REQUEST
-            )
-        payment_completed(order.id)
+        order,vendors = serializer.save()
+        
+        
+        print(Payment.objects.filter(order=order.pk, is_paid=True).exists())
+        
+        # if not Payment.objects.filter(order=order.pk, is_paid=True).exists():
+        #     return Response(
+        #         {'error': 'Payment must be completed before checkout.'},
+        #         status=status.HTTP_400_BAD_REQUEST
+        #     )
+        # payment_completed(order.id)
+        
         return Response({
             'message': 'Order created successfully',
             'order_id': order.id,
+            'vendors':vendors,
             'total_price': order.total_price,
             'created': order.created,
         }, status=status.HTTP_201_CREATED)

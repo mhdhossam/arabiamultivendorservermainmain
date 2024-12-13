@@ -3,6 +3,74 @@ from core.settings import PAYMOB_API_KEY, PAYMOB_INTEGRATION_ID
 import hmac
 import hashlib
 
+import requests
+from core.settings import PAYMOB_API_KEY, PAYMOB_INTEGRATION_ID
+import hmac
+import hashlib
+
+
+def get_paymob_token():
+    url = "https://accept.paymob.com/api/auth/tokens"
+    data = {"api_key": PAYMOB_API_KEY}
+    response = requests.post(url, json=data)
+    return response.json().get('token')
+
+
+def initiate_transfer(token, user_card, vendor_card, amount_cents):
+    """
+    Function to initiate a fund transfer using Paymob API.
+    """
+    url = "https://accept.paymob.com/api/payouts"
+    headers = {'Authorization': f'Bearer {token}'}
+    data = {
+        "source": {
+            "type": "card",
+            "identifier": user_card
+        },
+        "destination": {
+            "type": "card",
+            "identifier": vendor_card
+        },
+        "amount_cents": amount_cents,
+        "currency": "EGP"
+    }
+    response = requests.post(url, json=data, headers=headers)
+    if response.status_code == 200:
+        return response.json()
+    else:
+        raise Exception(f"Failed to transfer funds: {response.json()}")
+
+
+# Usage Example:
+def transfer_funds(user_card, vendor_card, amount):
+    try:
+        # Convert amount to cents
+        amount_cents = int(float(amount) * 100)
+
+        # Get Paymob Token
+        token = get_paymob_token()
+
+        # Initiate Transfer
+        transfer_response = initiate_transfer(token, user_card, vendor_card, amount_cents)
+
+        # Return the response
+        return {
+            "success": True,
+            "transfer_response": transfer_response
+            
+        }
+    except Exception as e:
+        return {
+            "success": False,
+            "error": str(e)
+        }
+
+
+
+
+
+
+
 
 def get_paymob_token():
     url = "https://accept.paymob.com/api/auth/tokens"

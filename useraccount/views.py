@@ -58,8 +58,7 @@ from rest_framework.exceptions import AuthenticationFailed
 class CustomTokenObtainPairView(TokenObtainPairView):
     serializer_class = CustomTokenObtainPairSerializer
     def post(self, request, *args, **kwargs):
-        if 'email' in request.data:
-            request.data['email'] = request.data['email'].lower()
+        
         # Check if the email is associated with an active account
         try:
             email = request.data.get('email')

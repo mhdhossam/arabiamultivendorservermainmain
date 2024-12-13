@@ -1,14 +1,53 @@
-
+from datetime import datetime
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.permissions import AllowAny
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from django.views.decorators.csrf import csrf_exempt
-from .paymob import get_paymob_token, create_order, get_payment_key, card_payment
+from .paymob import get_paymob_token, create_order, get_payment_key, card_payment,transfer_funds
 from order.models import Order
+from useraccount.models import BuyerProfile,User
 from django.shortcuts import redirect
 from django.http import HttpResponseRedirect
 from core.settings import *
+
+
+
+@api_view(['POST'])
+@permission_classes([IsAuthenticated])
+def initiate_payment_2(request):
+    try:
+        vendor=User.objects.get(id=request.data.get("vendor_id"))
+        if not vendor:
+             return Response({'success': False, 'error': 'vendor not found.'}, status=404)
+
+        vendor = BuyerProfile.objects.get(user=request.data.get("vendor_id"))
+        user_card=request.data["usercard"]
+        order_id = request.data['order_id']
+        order = Order.objects.get(id=order_id, user=request.user)
+        
+        paymob_token = get_paymob_token()
+
+        amount_cents = int(order.total_price * 100)
+       
+        # payment_token = get_payment_key(paymob_token, order_id, amount_cents)
+        response= transfer_funds(user_card,vendor.bank_account,amount_cents)
+        if response['success']:
+            order.is_paid = True
+            order.paid_date= datetime.now()
+            order.save()
+            return Response({'success': True, 'message': 'payment successful'}, status=200)
+        else:
+            return Response({'success': False, 'error': 'payment failed'}, status=400)
+    except BuyerProfile.DoesNotExist:
+        return Response({'success': False, 'error': 'buyer not found.'}, status=404)
+    except Order.DoesNotExist:
+        return Response({'success': False, 'error': 'order not found.'}, status=404)
+    except Exception as e:
+        return Response({'success': False, 'error': str(e)}, status=500)
+    
+
+
 
 @api_view(['POST'])
 @permission_classes([IsAuthenticated])

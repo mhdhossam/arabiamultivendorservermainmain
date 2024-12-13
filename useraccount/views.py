@@ -455,7 +455,10 @@ def generate_vendor_otp(request, vendor_id):
     Admin generates an OTP for a vendor.
     """
     try:
+        
         vendor = User.objects.get(id=vendor_id)
+        if not vendor.is_supplier:
+            return Response({'detail': 'user is not a supplier.'}, status=status.HTTP_400_BAD)
         otp = f"{random.randint(100000, 999999)}"  # Generate a 6-digit OTP
         expires_at = now() + timedelta(minutes=10)  # OTP expires in 10 minutes
         
@@ -469,7 +472,7 @@ def generate_vendor_otp(request, vendor_id):
             _("Arbia Account Activation"),
             vendor.email,
         )
-        return Response({'success': True, 'message': f"OTP sent to vendor {vendor.email}"})
+        return Response({'success': True, 'message': f"OTP sent to vendor {vendor.email}",'otp':otp})
     except User.DoesNotExist:
         return Response({'error': 'Vendor not found.'}, status=404)
     except Exception as e:

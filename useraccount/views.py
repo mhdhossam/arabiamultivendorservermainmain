@@ -450,7 +450,7 @@ from wallet.models import Wallet # Import your models
 import random
 
 @api_view(['POST'])
-@permission_classes([IsAuthenticated])
+# @permission_classes([IsAuthenticated])
 def generate_vendor_otp(request):
     """
     Admin generates an OTP for a vendor.
@@ -480,7 +480,7 @@ def generate_vendor_otp(request):
         return Response({'error': str(e)}, status=500)
 
 @api_view(['POST'])
-@permission_classes([IsAuthenticated])
+# @permission_classes([IsAuthenticated])
   # Restrict to admins
 def payout_to_vendor(request):
     """

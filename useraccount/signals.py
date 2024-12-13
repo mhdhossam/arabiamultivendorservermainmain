@@ -9,6 +9,30 @@ from allauth.socialaccount.models import SocialAccount
 from allauth.account.signals import user_signed_up
 from django.dispatch import receiver
 from useraccount.models import User
+# In signals.py (or in the appropriate file)
+from allauth.socialaccount.signals import social_account_added
+from django.dispatch import receiver
+from django.contrib.auth.models import User
+from django.core.mail import send_mail
+
+@receiver(social_account_added)
+def create_user_from_google(sender, request, sociallogin, **kwargs):
+    user = sociallogin.user
+    # Access the user info from Google
+    google_data = sociallogin.account.get_profile_data()
+    user.email = google_data.get('email')
+    user.first_name = google_data.get('first_name')
+    user.last_name = google_data.get('last_name')
+    user.save()
+
+    # Optional: Send a welcome email
+    send_mail(
+        'Welcome to Our Platform',
+        f'Hi {user.first_name}, thanks for signing up!',
+        'from@example.com',
+        [user.email],
+        fail_silently=False,
+    )
 
 
 class ParentWalletNotFoundError(Exception):

@@ -265,7 +265,7 @@ CSRF_TRUSTED_ORIGINS = [
 
 CSRF_COOKIE_SECURE = False
 
-ACCOUNT_DEFAULT_HTTP_PROTOCOL = "https"
+# ACCOUNT_DEFAULT_HTTP_PROTOCOL = "https"
 
 # Authentication backends
 AUTHENTICATION_BACKENDS = (
@@ -297,22 +297,11 @@ SOCIALACCOUNT_PROVIDERS = {
         'VERIFIED_EMAIL': False,
         'VERSION': 'v11.0',
     },
-    'google': {
-        'SCOPE': [
-            'profile',
-            'email',
-        ],
-        'FIELDS': [
-            
-            'email',
-            'name',
-            'first_name',
-            'last_name',
-            'phone',
-        ],
-        'AUTH_PARAMS': {
-            'access_type': 'online',
-        },
+      'google': {
+        'SCOPE': ['email', 'profile', 'phone'],
+        'AUTH_PARAMS': {'access_type': 'online'},
+        'FIELDS': ['id', 'email', 'name', 'first_name', 'last_name', 'phone'],
+        'EXCHANGE_TOKEN': True,
         'APP': {
             'client_id':config('ID'),
             'secret':config('SECRET'),
@@ -331,6 +320,8 @@ SOCIALACCOUNT_PROVIDERS = {
     }
 
 }
+LOGIN_REDIRECT_URL = 'https://arabia-front-rho.vercel.app/signup'  # Redirect to home after successful login
+
 
 ACCOUNT_EMAIL_REQUIRED = True
 ACCOUNT_USER_MODEL_USERNAME_FIELD = None

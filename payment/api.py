@@ -6,6 +6,7 @@ from rest_framework.response import Response
 from django.views.decorators.csrf import csrf_exempt
 from .paymob import get_paymob_token, create_order, get_payment_key, card_payment
 from order.models import Order
+from useraccount.models import BuyerProfile
 from django.shortcuts import redirect
 from django.http import HttpResponseRedirect
 from core.settings import *

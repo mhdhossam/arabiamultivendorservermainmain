@@ -442,7 +442,8 @@ from django.utils.timezone import now, timedelta
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated, IsAdminUser
-from .models import User, VendorPayoutOTP  # Import your models
+from .models import User, VendorPayoutOTP 
+from wallet.models import Wallet # Import your models
  # Import your transfer function
 # other imports...
 
@@ -485,16 +486,15 @@ def payout_to_vendor(request):
     """
     API to transfer money to a vendor's card with OTP validation.
     """
-    vendor_card = request.data.get('vendor_card')
     amount = request.data.get('amount')
     otp = request.data.get('otp')  # OTP provided by the vendor
     vendor_id = request.data.get('vendor_id')
+    user=request.user
 
-    if not vendor_card or not amount or not otp or not vendor_id:
+    if  not amount or not otp or not vendor_id:
         return Response({'error': 'Vendor card, amount, OTP, and vendor ID are required.'}, status=400)
 
     try:
-        vendor = User.objects.get(id=vendor_id)
         otp_record = VendorPayoutOTP.objects.filter(otp=otp).first()
 
         if not otp_record:
@@ -502,14 +502,23 @@ def payout_to_vendor(request):
         if not otp_record.is_valid():
             return Response({'error': 'OTP is expired or already used.'}, status=400)
 
+        vendor = Wallet.objects.get(id=vendor_id)
+        vendor_balance=float(vendor.balance)-float(amount)
+        vendor.balance=vendor_balance
+        vendor.save()
+        user_wallet=Wallet.objects.get(id=user.pk)
+        user_balance=float(user_wallet.balance)+float(amount)
+        user_wallet.balance=user_balance
+        user_wallet.save()
+
+        
         # Mark OTP as used
         otp_record.is_used = True
         otp_record.save()
 
-        amount_cents = int(float(amount) * 100)  # Convert amount to cents
-        payout_response = transfer_to_vendor(vendor_card, amount_cents)
+       
 
-        return Response({'success': True, 'payout_response': payout_response}, status=200)
+        return Response({'success': True, 'balance': user_balance}, status=200)
     except User.DoesNotExist:
         return Response({'error': 'Vendor not found.'}, status=404)
     except Exception as e:

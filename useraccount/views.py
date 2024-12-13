@@ -476,7 +476,8 @@ def generate_vendor_otp(request, vendor_id):
         return Response({'error': str(e)}, status=500)
 
 @api_view(['POST'])
-# @permission_classes([IsAdminUser])  # Restrict to admins
+@permission_classes([IsAuthenticated])
+  # Restrict to admins
 def payout_to_vendor(request):
     """
     API to transfer money to a vendor's card with OTP validation.

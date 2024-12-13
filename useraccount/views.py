@@ -463,7 +463,12 @@ def generate_vendor_otp(request, vendor_id):
         
         # Send OTP to vendor (e.g., via email or SMS)
         # Example: send_email_to_vendor(vendor.email, f"Your OTP is {otp}")
-        
+        send_temporary_password(
+            otp,
+            "emails/temp_password.html",
+            _("Arbia Account Activation"),
+            vendor.email,
+        )
         return Response({'success': True, 'message': f"OTP sent to vendor {vendor.email}"})
     except User.DoesNotExist:
         return Response({'error': 'Vendor not found.'}, status=404)

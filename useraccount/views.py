@@ -449,7 +449,7 @@ from .models import User, VendorPayoutOTP  # Import your models
 import random
 
 @api_view(['POST'])
-# @permission_classes([IsAdminUser])
+@permission_classes([IsAuthenticated])
 def generate_vendor_otp(request, vendor_id):
     """
     Admin generates an OTP for a vendor.

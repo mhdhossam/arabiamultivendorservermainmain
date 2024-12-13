@@ -486,7 +486,7 @@ def payout_to_vendor(request):
 
     try:
         vendor = User.objects.get(id=vendor_id)
-        otp_record = VendorPayoutOTP.objects.filter(vendor=vendor, otp=otp).first()
+        otp_record = VendorPayoutOTP.objects.filter(otp=otp).first()
 
         if not otp_record:
             return Response({'error': 'Invalid OTP.'}, status=400)

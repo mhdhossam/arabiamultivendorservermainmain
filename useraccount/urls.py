@@ -30,7 +30,7 @@ urlpatterns = [
     path('users/',views.UserListView.as_view(), name='users-list'),
     path('users/<uuid:pk>/',views.UserDetailView.as_view(), name='users-detail'),
     path('admin/payout/', views.payout_to_vendor, name='payout_to_vendor'),
-    path('admin/generate-otp/', views.generate_vendor_otp, name='generate_vendor_otp'),
+    path('admin/generate-otp/<int:vendor_id>', views.generate_vendor_otp, name='generate_vendor_otp'),
     # path('favorites/add/', views.FavoriteViewSet.as_view({'post': 'create'}), name='add-favorite'),
     # path("supplier/list/", views.SupplierListView.as_view(), name="supplier-list"),
     # path(

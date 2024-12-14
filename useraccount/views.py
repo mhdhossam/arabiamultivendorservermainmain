@@ -501,11 +501,11 @@ def payout_to_vendor(request):
         if not otp_record.is_valid():
             return Response({'error': 'OTP is expired or already used.'}, status=400)
 
-        vendor = Wallet.objects.get(id=vendor_id)
+        vendor = Wallet.objects.get(user=vendor_id)
         vendor_balance=float(vendor.balance)-float(amount)
         vendor.balance=vendor_balance
         vendor.save()
-        user_wallet=Wallet.objects.get(id=user.pk)
+        user_wallet=Wallet.objects.get(user=user.pk)
         user_balance=float(user_wallet.balance)+float(amount)
         user_wallet.balance=user_balance
         user_wallet.save()
